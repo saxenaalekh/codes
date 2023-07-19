@@ -1,0 +1,23 @@
+from transformers import pipeline
+
+def summarize_text(input_text, max_chunk_length=512, max_summary_length=150):
+    summarizer = pipeline("summarization")
+    chunks = [input_text[i:i + max_chunk_length] for i in range(0, len(input_text), max_chunk_length)]
+    summarized_chunks = []
+    
+    for chunk in chunks:
+        summary = summarizer(chunk, max_length=max_summary_length, min_length=50, do_sample=False)[0]['summary_text']
+        summarized_chunks.append(summary)
+    
+    return " ".join(summarized_chunks)
+
+# Example text for summarization
+long_text = """
+Insert your very long text here.
+"""
+
+# Summarize the long text using sliding window approach
+summarized_text = summarize_text(long_text)
+
+print("Summarized Text:")
+print(summarized_text)
